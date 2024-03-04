@@ -29,31 +29,53 @@ namespace myDS
         class _iterator{
         private:
             TYPE_NAME *_ptr;
-            myDS::vector<TYPE_NAME> * _super_pointer;
+            myDS::vector<TYPE_NAME> * _upper_pointer;
+	    size_t _upper_idx;
+	    enum __iter_dest_type {front,back};
+	    __iter_dest_type _iter_dest_type;
 
-        public:
+	    public:
 
-            _iterator(myDS::vector<TYPE_NAME> *)
+            _iterator(myDS::vector<TYPE_NAME> * _upper,size_t _n,__iter_dest_type _d)
+	    {
+		_upper_idx = _n;
+		_upper_pointer = _upper;
+		_ptr = *(*_upper_pointer)[_n];
+		_iter_dest = _d;
+	    }
 
             TYPE_NAME & operator*()
             {
-
+		return _ptr;
             }
 
             TYPE_NAME * operator->()
             {
-
+		return _ptr;
             }
 
             TYPE_NAME operator++()
             {
-
+		if(_iter_dest == front) _upper_idx ++;
+		else _upper_idx --;
+		_ptr = *((*_upper_pointer)[_upper_idx]);
+		return _ptr;
             }
             
-            TYPE_NAME operator+()
+            TYPE_NAME operator+(size_t _n)
             {
-
+		//_upper_idx += _n;
+		if(_iter_dest == front) _upper_idx += _n;
+		else _upper_idx -= _n;
+		_ptr = *((*_upper_pointer)[_upper_idx]);
+		return _ptr;
             }
+
+	    bool operator==(myDS::vector<TYPE_NAME>::_iteartor _b)
+	    {
+		if((*_b) == _ptr) return 1;
+		else return 0;
+	    }
 
         };
 
@@ -114,53 +136,60 @@ namespace myDS
 
         vector<TYPE_NAME>::_iterator begin()
         {
-
+	    return myDS::vector<TYPE_NAME>::_itreator(this,0,front);
         }
 
         myDS::vector<TYPE_NAME>::_iterator rbegin()
         {
-
+	    return myDS::vector<TYPE_NAME>::_itreator(this,_size-1,back);
         }
 
         myDS::vector<TYPE_NAME>::_iterator end()
         {
-
+	    return myDS::vector<TYPE_NAME>::_itreator(this,_push_back_idx,front);
         }
 
         myDS::vector<TYPE_NAME>::_iterator rend()
         {
-
+	    return myDS::vector<TYPE_NAME>::_iterator(this,0,back);
         }
 
         TYPE_NAME at(std::size_t _n)
         {
-
+	    return &(_begin[_n]);
         }
 
         std::size_t size()
         {
-
+	    return _size;
         }
 
         bool equal(myDS::vector<TYPE_NAME> _b)
         {
-
+	    for(int i = 0;i < _size;i ++)
+		if(_b[i] != _begin[i]) return false;
+	    return true;
         }
 
         TYPE_NAME & operator[](std::size_t _n)
         {
-
+	    return &(_begin[_n]);	
         }
 
         myDS::vector<TYPE_NAME> & operator= (myDS::vector<TYPE_NAME> _b)
         {
-
+	     this = new myDS::vector<TYPE_NAME>(_b);
         }
 
         myDS::vector<TYPE_NAME> & operator+ (myDS::vector<TYPE_NAME> _b)
         {
-            
+            for(auto x:_b) this->push_back(x);   
         }
+
+	~vector()
+	{
+	    delete [] _begin;
+	}
     
     };
 } // namespace myDS
