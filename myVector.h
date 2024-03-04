@@ -32,7 +32,7 @@ namespace myDS
             myDS::vector<TYPE_NAME> * _upper_pointer;
 	    size_t _upper_idx;
 	    enum __iter_dest_type {front,back};
-	    __iter_dest_type _iter_dest_type;
+	    __iter_dest_type _iter_dest;
 
 	    public:
 
@@ -71,7 +71,7 @@ namespace myDS
 		return _ptr;
             }
 
-	    bool operator==(myDS::vector<TYPE_NAME>::_iteartor _b)
+	    bool operator==(myDS::vector<TYPE_NAME>::_iterator _b)
 	    {
 		if((*_b) == _ptr) return 1;
 		else return 0;
@@ -136,17 +136,17 @@ namespace myDS
 
         vector<TYPE_NAME>::_iterator begin()
         {
-	    return myDS::vector<TYPE_NAME>::_itreator(this,0,front);
+	    return myDS::vector<TYPE_NAME>::_iterator(this,0,front);
         }
 
         myDS::vector<TYPE_NAME>::_iterator rbegin()
         {
-	    return myDS::vector<TYPE_NAME>::_itreator(this,_size-1,back);
+	    return myDS::vector<TYPE_NAME>::_iterator(this,_size-1,back);
         }
 
         myDS::vector<TYPE_NAME>::_iterator end()
         {
-	    return myDS::vector<TYPE_NAME>::_itreator(this,_push_back_idx,front);
+	    return myDS::vector<TYPE_NAME>::_iterator(this,_push_back_idx,front);
         }
 
         myDS::vector<TYPE_NAME>::_iterator rend()
