@@ -22,8 +22,8 @@ namespace myDS
     {
     private:
         std::size_t _size = 0;
-        std::size_t _max_cap = 0;
-        TYPE_NAME *_begin = nullptr;
+        std::size_t _max_cap = 1;
+        TYPE_NAME *_begin = new TYPE_NAME[1];
         std::size_t _push_back_idx = 0;
 
         class _iterator
@@ -59,33 +59,41 @@ namespace myDS
                 return _ptr;
             }
 
-            TYPE_NAME operator++()
+            myDS::vector<TYPE_NAME>::_iterator operator++()
             {
                 if (_iter_dest == front)
                     _upper_idx++;
                 else
                     _upper_idx--;
-                _ptr = *((*_upper_pointer)[_upper_idx]);
-                return _ptr;
+                _ptr = &((*_upper_pointer)[_upper_idx]);
+                return *this;
             }
 
-            TYPE_NAME operator+(size_t _n)
+            myDS::vector<TYPE_NAME>::_iterator operator+(size_t _n)
             {
                 //_upper_idx += _n;
                 if (_iter_dest == front)
                     _upper_idx += _n;
                 else
                     _upper_idx -= _n;
-                _ptr = *((*_upper_pointer)[_upper_idx]);
-                return _ptr;
+                _ptr = &((*_upper_pointer)[_upper_idx]);
+                return *this;
             }
 
             bool operator==(myDS::vector<TYPE_NAME>::_iterator _b)
             {
-                if ((*_b) == _ptr)
+                if (&(*_b) == _ptr)
                     return 1;
                 else
                     return 0;
+            }
+
+            bool operator!=(myDS::vector<TYPE_NAME>::_iterator _b)
+            {
+                if (&(*_b) == _ptr)
+                    return 0;
+                else
+                    return 1;
             }
         };
 
@@ -155,17 +163,20 @@ namespace myDS
 
         myDS::vector<TYPE_NAME>::_iterator rbegin()
         {
-            return myDS::vector<TYPE_NAME>::_iterator(this, _size - 1, "back");
+            enum myDS::vector<TYPE_NAME>::_iterator::__iter_dest_type s = myDS::vector<TYPE_NAME>::_iterator::__iter_dest_type::back;
+            return myDS::vector<TYPE_NAME>::_iterator(this, _size - 1,s);
         }
 
         myDS::vector<TYPE_NAME>::_iterator end()
         {
-            return myDS::vector<TYPE_NAME>::_iterator(this, _push_back_idx, "front");
+            enum myDS::vector<TYPE_NAME>::_iterator::__iter_dest_type s = myDS::vector<TYPE_NAME>::_iterator::__iter_dest_type::front;
+            return myDS::vector<TYPE_NAME>::_iterator(this, _push_back_idx,s);
         }
 
         myDS::vector<TYPE_NAME>::_iterator rend()
         {
-            return myDS::vector<TYPE_NAME>::_iterator(this, 0, "back");
+            enum myDS::vector<TYPE_NAME>::_iterator::__iter_dest_type s = myDS::vector<TYPE_NAME>::_iterator::__iter_dest_type::back;
+            return myDS::vector<TYPE_NAME>::_iterator(this, 0, s);
         }
 
         TYPE_NAME at(std::size_t _n)
