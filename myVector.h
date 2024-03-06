@@ -11,6 +11,8 @@
 #define PRVLIBCPP_VECTOR_HPP
 
 #include <cstddef>
+#include <type_traits>
+ 
 namespace myDS
 {
 
@@ -120,10 +122,7 @@ namespace myDS
 
         vector(std::size_t _n) //
         {
-            _begin = new TYPE_NAME[_n];
-            _size = _n;
-            _max_cap = _n;
-            _push_back_idx = _n;
+            this->resize(_n);
         }
 
         vector(std::size_t _n, const TYPE_NAME &_init_value)
@@ -150,6 +149,8 @@ namespace myDS
 		    if(_push_back_idx >= _max_cap)
 			_expension();
 		    TYPE_NAME __tmp;
+            if(std::is_integral<TYPE_NAME>::value) __tmp = 0;
+            if(std::is_floating_point<TYPE_NAME>::value) __tmp = 0;
 		    _begin[_push_back_idx] = __tmp;
 		    _size ++;
 		    _push_back_idx ++;
