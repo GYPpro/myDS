@@ -4,7 +4,7 @@
  * @details
  * 不知道该写什么，反正就是vector，正常用就行了
  * @author github.com/GYPpro
- * @version 0.0.1
+ * @version 0.1.0
  */
 
 #ifndef PRVLIBCPP_VECTOR_HPP
