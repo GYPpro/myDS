@@ -107,7 +107,8 @@ namespace myDS
             else
             {
                 TYPE_NAME *_next_begin = new TYPE_NAME[_EXPENSION_RATIO * (std::size_t)_max_cap];
-                for (std::size_t i = 0; i < _size; i++)
+		_max_cap *= _EXPENSION_RATIO;
+		for (std::size_t i = 0; i < _size; i++)
                     _next_begin[i] = _begin[i];
                 delete[] _begin;
                 _begin = _next_begin;
@@ -143,7 +144,18 @@ namespace myDS
 
         void resize(size_t _n)
         {
-            _size = _n;
+	    if(_n > _size)
+		for(int __i = 0;__i < _n;__i++)
+		{
+		    if(_push_back_idx >= _max_cap)
+			_expension();
+		    TYPE_NAME __tmp;
+		    _begin[_push_back_idx] = __tmp;
+		    _size ++;
+		    _push_back_idx ++;
+		}
+	    _size = _n;
+	    _push_back_idx = _n;
         }
 
         void push_back(const TYPE_NAME &_n)

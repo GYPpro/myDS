@@ -1,4 +1,5 @@
-#include <d:\Desktop\Document\Coding\C++\ProjectC\myDS\myVector.h>
+//#include <d:\Desktop\Document\Coding\C++\ProjectC\myDS\myVector.h>
+#include "myVector.h"
 #include <iostream>
 #include <vector>
 
