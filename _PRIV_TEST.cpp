@@ -27,14 +27,14 @@ int t1()
 vector<int> tc;
 std::vector<int> comm;
 
-class testcls{
+class ssdftestcls{
 public:
-    vector<int> rtt;
-    int a;
-    testcls& operator=(const testcls& mwr)
+    vector<int> rtt = vector<int>();
+    int a = 0;
+    ssdftestcls* operator=(const ssdftestcls& mwr)
     {
-        testcls ctk;
-        ctk.a = mwr.a;
+        ssdftestcls* ctk = new ssdftestcls();
+        ctk->a = mwr.a;
         // rtt = mwr.rtt;
         return ctk;
     }
@@ -115,9 +115,14 @@ void t2()
     default:
         break;
     }
-    testcls tcl;
-    vector<testcls> arr(10);
-    for(auto& x:arr) x.rtt = vector<int>(15);
+    // ssdftestcls tcl;
+    vector<ssdftestcls> arr(4);
+    for(auto x = arr.begin();x != arr.end();x ++)
+    {
+        auto y = arr.end();
+        std::cout << (*x).a << " ";
+    }
+    // arr[0].rtt = vector<int>(15);
 }
 
 class dtc{
@@ -137,10 +142,13 @@ void t3()
     _begin[2] = __tmp;
 }
 
+// HACK:
 void t4()
 {
-    vector<vector<int>> arr(3);
-    arr[0].resize(3);
+    // vector<dtc> arr(3);
+    // vector<vector<int>> arr(3);
+    vector<dtc> arr(3);
+    // arr[0].resize(3);
     // for(auto &x:arr) x.resize(15);
 }
 
@@ -150,7 +158,7 @@ int main()
     while(1){
         i ++;
         // std::cout << i << "\n";
-	    t2();
+	    t4();
     }
     //getchar();
     //getchar();

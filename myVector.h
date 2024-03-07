@@ -10,6 +10,7 @@
 #ifndef PRVLIBCPP_VECTOR_HPP
 #define PRVLIBCPP_VECTOR_HPP
 
+#include <new>
 #include <cstddef>
 #include <type_traits>
 namespace myDS
@@ -24,7 +25,7 @@ namespace myDS
     private:
         std::size_t _size;
         std::size_t _max_cap;
-        TYPE_NAME *_begin = new TYPE_NAME[0];
+        TYPE_NAME *_begin;
         TYPE_NAME *_push_back_idx = _begin;
 
         class _iterator
@@ -70,6 +71,17 @@ namespace myDS
                 return *this;
             }
 
+            myDS::vector<TYPE_NAME>::_iterator operator++(int)
+            {
+                myDS::vector<TYPE_NAME>::_iterator old = *this;
+                if (_iter_dest == front)
+                    _upper_idx++;
+                else
+                    _upper_idx--;
+                _ptr = &((*_upper_pointer)[_upper_idx]);
+                return old;
+            }
+
             myDS::vector<TYPE_NAME>::_iterator operator+(size_t _n)
             {
                 //_upper_idx += _n;
@@ -105,12 +117,13 @@ namespace myDS
             {
                 _begin = new TYPE_NAME[_INITIAL_SIZE];
                 _max_cap = _INITIAL_SIZE;
-                
             }
             else
             {
                 TYPE_NAME *_next_begin = new TYPE_NAME[_EXPENSION_RATIO * (std::size_t)_max_cap];
                 _max_cap *= _EXPENSION_RATIO;
+                for(TYPE_NAME * __ptr = _begin;__ptr != _begin + _max_cap;__ptr ++)
+                    __ptr->~TYPE_NAME();
                 for (std::size_t i = 0; i < _size; i++)
                     _next_begin[i] = _begin[i];
                 delete[] _begin;
@@ -134,6 +147,7 @@ namespace myDS
             _push_back_idx = _begin + _size;
         }
 
+        // FIXME:
         vector(std::size_t _n, TYPE_NAME _init_value)
         {
             _begin = new TYPE_NAME[_n];
@@ -168,11 +182,12 @@ namespace myDS
             _push_back_idx = _begin + _size;
         }
 
-        void push_back(const TYPE_NAME &_n)
+        // HACK:模板参数为未实现=的类
+        void push_back(const TYPE_NAME &val)
         {
             if(_size + 1 >= _max_cap)
                 _expension();   
-            *_push_back_idx = _n;
+            *_push_back_idx = val;
             _push_back_idx++;
             _size++;
         }
@@ -228,6 +243,7 @@ namespace myDS
         {
             this->resize(0);
             for(auto __x:_b) this->push_back(__x);
+            
         }
 
         myDS::vector<TYPE_NAME> &operator+(myDS::vector<TYPE_NAME> _b)
@@ -238,14 +254,13 @@ namespace myDS
 
         ~vector()
         {
-            for(TYPE_NAME * __ptr = _begin;__ptr != __ptr + _max_cap;__ptr ++)
+            for(TYPE_NAME * __ptr = _begin;__ptr != _begin + _max_cap;__ptr ++)
                 __ptr->~TYPE_NAME();
-            delete[] _begin;
+            
+            //FIXME:Unknown signal
+            ::operator delete(_begin);
         }
     };
 } // namespace myDS
-
-// #define std::vector myDS::vector
-// #define vector myDS::vector
 
 #endif
