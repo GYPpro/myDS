@@ -27,10 +27,24 @@ int t1()
 vector<int> tc;
 std::vector<int> comm;
 
+class testcls{
+public:
+    vector<int> rtt;
+    int a;
+    testcls& operator=(const testcls& mwr)
+    {
+        testcls ctk;
+        ctk.a = mwr.a;
+        // rtt = mwr.rtt;
+        return ctk;
+    }
+    // std::vector<int> stlt;
+};
+
 void t2()
 {
     //
-    // vector<int> a;
+    vector<int> a;
     // a.push_back(1);
     // a.push_back(2);
     // std::cout << a[1] << " " << a.at(0) << "\n";
@@ -77,7 +91,7 @@ void t2()
         break;
     case 'w':
         {
-            std::cout << "myDS + auto :";
+            std::cout << "myDS + auto:";
             for(auto x:tc)
                 std::cout << x <<" ";
 
@@ -88,6 +102,7 @@ void t2()
             std::cout << "\nSTL  + for :";
             for(int i = 0;i < comm.size();i ++)
                 std::cout << comm[i] << " ";
+            std::cout << "\n";
         }
         break;
     case 's':
@@ -100,12 +115,43 @@ void t2()
     default:
         break;
     }
+    testcls tcl;
+    vector<testcls> arr(10);
+    for(auto& x:arr) x.rtt = vector<int>(15);
+}
+
+class dtc{
+public:
+    ~dtc()
+    {
+        std::cout << "DTC";
+    }
+};
+
+void t3()
+{
+    vector<dtc> arr(1);
+    dtc * _begin = new dtc[20];
+    dtc __tmp = dtc();
+    delete &_begin[2];
+    _begin[2] = __tmp;
+}
+
+void t4()
+{
+    vector<vector<int>> arr(3);
+    arr[0].resize(3);
+    // for(auto &x:arr) x.resize(15);
 }
 
 int main()
 {
-    while(1)
+    int i = 0;
+    while(1){
+        i ++;
+        // std::cout << i << "\n";
 	    t2();
+    }
     //getchar();
     //getchar();
     return 0;

@@ -4,7 +4,7 @@
  * @details
  * 不知道该写什么，反正就是vector，正常用就行了
  * @author github.com/GYPpro
- * @version 0.1.0
+ * @version 0.2.0
  */
 
 #ifndef PRVLIBCPP_VECTOR_HPP
@@ -12,7 +12,6 @@
 
 #include <cstddef>
 #include <type_traits>
- 
 namespace myDS
 {
 
@@ -23,10 +22,10 @@ namespace myDS
     class vector
     {
     private:
-        std::size_t _size = 0;
-        std::size_t _max_cap = 1;
-        TYPE_NAME *_begin = new TYPE_NAME[1];
-        std::size_t _push_back_idx = 0;
+        std::size_t _size;
+        std::size_t _max_cap;
+        TYPE_NAME *_begin = new TYPE_NAME[0];
+        TYPE_NAME *_push_back_idx = _begin;
 
         class _iterator
         {
@@ -105,27 +104,37 @@ namespace myDS
             if (_size == 0)
             {
                 _begin = new TYPE_NAME[_INITIAL_SIZE];
+                _max_cap = _INITIAL_SIZE;
+                
             }
             else
             {
                 TYPE_NAME *_next_begin = new TYPE_NAME[_EXPENSION_RATIO * (std::size_t)_max_cap];
-		_max_cap *= _EXPENSION_RATIO;
-		for (std::size_t i = 0; i < _size; i++)
+                _max_cap *= _EXPENSION_RATIO;
+                for (std::size_t i = 0; i < _size; i++)
                     _next_begin[i] = _begin[i];
                 delete[] _begin;
                 _begin = _next_begin;
             }
+            _push_back_idx = _begin + _size;
         }
 
     public:
-        vector() {}
+        vector() {
+            _size = 0;
+            _max_cap = 0;
+            _push_back_idx = _begin + _size;
+        }
 
         vector(std::size_t _n) //
         {
+            _size = 0;
+            _max_cap = 0;
             this->resize(_n);
+            _push_back_idx = _begin + _size;
         }
 
-        vector(std::size_t _n, const TYPE_NAME &_init_value)
+        vector(std::size_t _n, TYPE_NAME _init_value)
         {
             _begin = new TYPE_NAME[_n];
             _size = _n;
@@ -143,27 +152,27 @@ namespace myDS
 
         void resize(size_t _n)
         {
-	    if(_n > _size)
-		for(int __i = 0;__i < _n;__i++)
-		{
-		    if(_push_back_idx >= _max_cap)
-			_expension();
-		    TYPE_NAME __tmp;
-            if(std::is_integral<TYPE_NAME>::value) __tmp = 0;
-            if(std::is_floating_point<TYPE_NAME>::value) __tmp = 0;
-		    _begin[_push_back_idx] = __tmp;
-		    _size ++;
-		    _push_back_idx ++;
-		}
-	    _size = _n;
-	    _push_back_idx = _n;
+            if(_n > _size)
+                for(int __i = 0;__i < _n;__i++)
+                {
+                    if(_size + 1 >= _max_cap)
+                        _expension();   
+                    *_push_back_idx = TYPE_NAME();
+                    // if(std::is_integral<TYPE_NAME>::value){ __tmp = 0;}
+                    // if(std::is_floating_point<TYPE_NAME>::value){ __tmp = 0;}
+                    // delete &_begin[_push_back_idx];
+                    _size ++;
+                    _push_back_idx ++;
+                }
+            _size = _n;
+            _push_back_idx = _begin + _size;
         }
 
         void push_back(const TYPE_NAME &_n)
         {
-            if (_push_back_idx >= _max_cap)
-                _expension();
-            _begin[_push_back_idx] = _n;
+            if(_size + 1 >= _max_cap)
+                _expension();   
+            *_push_back_idx = _n;
             _push_back_idx++;
             _size++;
         }
@@ -183,7 +192,7 @@ namespace myDS
         myDS::vector<TYPE_NAME>::_iterator end()
         {
             enum myDS::vector<TYPE_NAME>::_iterator::__iter_dest_type s = myDS::vector<TYPE_NAME>::_iterator::__iter_dest_type::front;
-            return myDS::vector<TYPE_NAME>::_iterator(this, _push_back_idx,s);
+            return myDS::vector<TYPE_NAME>::_iterator(this,_size,s);
         }
 
         myDS::vector<TYPE_NAME>::_iterator rend()
@@ -217,7 +226,8 @@ namespace myDS
 
         myDS::vector<TYPE_NAME> &operator=(myDS::vector<TYPE_NAME> _b)
         {
-            this = new myDS::vector<TYPE_NAME>(_b);
+            this->resize(0);
+            for(auto __x:_b) this->push_back(__x);
         }
 
         myDS::vector<TYPE_NAME> &operator+(myDS::vector<TYPE_NAME> _b)
@@ -228,6 +238,8 @@ namespace myDS
 
         ~vector()
         {
+            for(TYPE_NAME * __ptr = _begin;__ptr != __ptr + _max_cap;__ptr ++)
+                __ptr->~TYPE_NAME();
             delete[] _begin;
         }
     };
