@@ -142,12 +142,15 @@ void t3()
     _begin[2] = __tmp;
 }
 
+
 // HACK:
-void t4()
+void t4() //test case 4:template = calss(without operator= defined)
+	  //FIXME:memary leak!
 {
-    // vector<dtc> arr(3);
     // vector<vector<int>> arr(3);
-    vector<dtc> arr(3);
+    while(1){
+	myDS::vector<dtc> arr(3);
+    }
     // arr[0].resize(3);
     // for(auto &x:arr) x.resize(15);
 }
